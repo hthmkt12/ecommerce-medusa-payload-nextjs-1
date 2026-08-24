@@ -1,7 +1,6 @@
-# Medusa backend (ecommerce-template) — build context is the repo root
+# Payload CMS (ecommerce-template-cms) — build context is the repo root
 FROM node:20-alpine
 
-# libc6-compat needed by some native deps
 RUN apk add --no-cache libc6-compat
 
 WORKDIR /app
@@ -9,14 +8,13 @@ WORKDIR /app
 RUN npm install -g pnpm
 
 # Install dependencies first for better layer caching
-COPY ecommerce-template/package.json ecommerce-template/pnpm-lock.yaml ./
+COPY ecommerce-template-cms/package.json ecommerce-template-cms/pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 
-# Copy backend source
-COPY ecommerce-template/ .
+# Copy CMS source
+COPY ecommerce-template-cms/ .
 
-EXPOSE 9000
+EXPOSE 3000
 
-RUN chmod +x start.sh
-
-CMD ./start.sh
+# Start Payload (Next.js) in development mode
+CMD ["pnpm", "dev"]

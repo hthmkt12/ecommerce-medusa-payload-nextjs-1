@@ -1,8 +1,4 @@
-# Whitelist approach: exclude everything, then re-include only the backend
 *
-!ecommerce-template
-ecommerce-template/node_modules
-ecommerce-template/.env
-ecommerce-template/.env.*
-ecommerce-template/.vscode
-ecommerce-template/.gitignore
+!ecommerce-template-cms
+ecommerce-template-cms/node_modules
+ecommerce-template-cms/.env*
