@@ -1,4 +1,4 @@
 *
-!ecommerce-template-cms
-ecommerce-template-cms/node_modules
-ecommerce-template-cms/.env*
+!ecommerce-template-storefront
+ecommerce-template-storefront/node_modules
+ecommerce-template-storefront/.env*
