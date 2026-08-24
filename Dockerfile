@@ -19,5 +19,5 @@ RUN pnpm build
 
 EXPOSE 3000
 
-# Start Payload in production mode
-CMD ["pnpm", "start"]
+# Apply DB migrations (DATABASE_URI comes from runtime env), then start
+CMD pnpm payload migrate && pnpm start
