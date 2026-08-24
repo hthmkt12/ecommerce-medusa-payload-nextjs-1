@@ -14,7 +14,10 @@ RUN pnpm install --frozen-lockfile
 # Copy CMS source
 COPY ecommerce-template-cms/ .
 
+# Build Payload (Next.js) for production
+RUN pnpm build
+
 EXPOSE 3000
 
-# Start Payload (Next.js) in development mode
-CMD ["pnpm", "dev"]
+# Start Payload in production mode
+CMD ["pnpm", "start"]
