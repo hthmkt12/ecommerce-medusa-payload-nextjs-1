@@ -29,9 +29,7 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
+  typescript: {},
   images: {
     remotePatterns: [
       payloadPattern,

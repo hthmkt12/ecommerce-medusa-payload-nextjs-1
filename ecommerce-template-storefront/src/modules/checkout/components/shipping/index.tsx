@@ -18,10 +18,22 @@ const PICKUP_OPTION_OFF = "__PICKUP_OFF"
 
 type ShippingProps = {
   cart: HttpTypes.StoreCart
-  availableShippingMethods: HttpTypes.StoreCartShippingOption[] | null
+  availableShippingMethods: AvailableShippingMethod[] | null
 }
 
-function formatAddress(address: HttpTypes.StoreCartAddress) {
+// Relations returned by GET /store/shipping-options at runtime but not
+// declared on the generated HttpTypes.
+type AvailableShippingMethod = HttpTypes.StoreCartShippingOption & {
+  service_zone?: {
+    fulfillment_set?: {
+      type?: string
+      location?: { address?: HttpTypes.StoreCartAddress }
+    }
+  }
+  insufficient_inventory?: boolean
+}
+
+function formatAddress(address?: HttpTypes.StoreCartAddress) {
   if (!address) {
     return ""
   }
