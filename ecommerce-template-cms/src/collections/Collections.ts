@@ -1,5 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
+import { isAuthenticated } from '../access/isAuthenticated'
+
 export const Collections: CollectionConfig = {
   slug: 'collections',
   admin: {
@@ -162,8 +164,8 @@ export const Collections: CollectionConfig = {
   ],
   access: {
     read: () => true,
-    update: () => true,
-    create: ({ req }) => !!req.query.is_from_medusa,
-    delete: ({ req }) => !!req.query.is_from_medusa,
+    update: isAuthenticated,
+    create: isAuthenticated,
+    delete: isAuthenticated,
   },
 }

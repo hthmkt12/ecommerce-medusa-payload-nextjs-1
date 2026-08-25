@@ -6,6 +6,8 @@ import {
 
 import type { CollectionConfig } from 'payload'
 
+import { isAuthenticated } from '../access/isAuthenticated'
+
 export const Products: CollectionConfig = {
   slug: 'products',
   admin: {
@@ -306,8 +308,8 @@ export const Products: CollectionConfig = {
   },
   access: {
     read: () => true,
-    update: () => true,
-    create: ({ req }) => !!req.query.is_from_medusa,
-    delete: ({ req }) => !!req.query.is_from_medusa,
+    update: isAuthenticated,
+    create: isAuthenticated,
+    delete: isAuthenticated,
   },
 }
