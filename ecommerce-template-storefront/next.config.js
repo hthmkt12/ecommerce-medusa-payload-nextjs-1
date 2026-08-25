@@ -26,9 +26,6 @@ const nextConfig = {
       fullUrl: true,
     },
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   typescript: {},
   images: {
     remotePatterns: [
