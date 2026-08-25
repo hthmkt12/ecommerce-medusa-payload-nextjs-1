@@ -71,5 +71,36 @@ Note: TOSE managed DB provisioning was broken at deploy time (see Known Issues),
 2. Rolling updates can wedge: new pod stays Pending while an old pod holds quota;
    `tose down -y` may not clean orphaned ReplicaSets from failed rollouts.
    Remedy: stop stale deployments via API, verify `Pods: 0/0`, then deploy once.
+   Confirmed 2026-08-25: `tose down` refuses when the *latest* deployment record
+   is "failed" ("Latest deployment is already failed") even though a pod from an
+   *earlier* deployment still holds quota; `tose restart` only bounces the old
+   pod. Clearing the stale deployment requires the dashboard/API — the CLI alone
+   cannot recover from this state.
 3. If the default domain 404s (Go-router text/plain 404) after a failed rollout,
    re-add it via `POST /projects/<slug>/domains`.
+
+## Build-time vs runtime env
+
+- Payload CMS: `src/payload.config.ts` fails fast when `PAYLOAD_SECRET` /
+  `DATABASE_URI` are missing at runtime boot, but skips enforcement during
+  `next build` (`NEXT_PHASE === 'phase-production-build'`) — page data
+  collection imports the config without secrets present.
+- Medusa backend: `medusa-config.ts` refuses to boot in production without
+  `JWT_SECRET`, `COOKIE_SECRET`, `PAYLOAD_API_KEY`. The root Dockerfile must
+  NOT set `NODE_ENV=production` before its `pnpm run build` step or image
+  builds fail; NODE_ENV is supplied by the runtime environment only.
+
+## PAYLOAD_API_KEY rotation (discovered 2026-08-25)
+
+The key recorded in git history (`cc946fdd-…`) does NOT authenticate against
+the live CMS (`/api/users/me` → `{user: null}`, collection reads → 403), most
+likely because `PAYLOAD_SECRET` changed after the key was created — Payload
+stores keys as HMAC-SHA256(payload.secret, key), so rotating the secret
+invalidates every stored key hash. Medusa→Payload sync was therefore already
+broken before the auth hardening landed. Recovery sequence:
+
+1. Deploy the updated CMS, log into `/admin`.
+2. Users → admin user → generate a new API key (enableAPIKey).
+3. Set `PAYLOAD_API_KEY` on TOSE project `ecommerce` → redeploy backend.
+4. Verify sync (edit a product, confirm it lands in CMS), then discard the old
+   key value everywhere (local `.env` already regenerated).
