@@ -20,6 +20,11 @@ const dirname = path.dirname(filename)
 function requiredEnv(name: string): string {
   const value = process.env[name]
   if (!value) {
+    // Next.js evaluates this module during `next build` (page data collection),
+    // where secrets are intentionally absent. Only enforce at runtime boot.
+    if (process.env.NEXT_PHASE === 'phase-production-build') {
+      return ''
+    }
     throw new Error(
       `Missing required environment variable ${name}. Copy .env.example to .env and fill it in.`,
     )
