@@ -1,4 +1,4 @@
-import {
+﻿import {
   createWorkflow,
   transform,
   when,
@@ -44,13 +44,11 @@ export const updatePayloadCollectionsWorkflow = createWorkflow(
           items: data.collections
             .filter((collection) => {
               const payloadCollection =
-                // @ts-expect-error
                 collection.payload_collection as PayloadCollectionItem;
               return payloadCollection;
             })
             .map((collection) => {
               const payloadCollection =
-                // @ts-expect-error
                 collection.payload_collection as PayloadCollectionItem;
               return {
                 id: payloadCollection.id, // Use the Payload collection ID

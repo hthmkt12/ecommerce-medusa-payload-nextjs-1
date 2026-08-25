@@ -1,4 +1,4 @@
-import {
+﻿import {
   createWorkflow,
   transform,
   when,
@@ -38,7 +38,7 @@ export const createPayloadProductOptionsWorkflow = createWorkflow(
         const items: Record<string, PayloadUpsertData> = {};
 
         data.productOptions.forEach((option) => {
-          const payloadProduct = // @ts-expect-error
+          const payloadProduct =
           option.product?.payload_product as PayloadCollectionItem;
           if (!payloadProduct) {
             return;
