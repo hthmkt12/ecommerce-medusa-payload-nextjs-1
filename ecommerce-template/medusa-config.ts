@@ -2,6 +2,19 @@ import { loadEnv, defineConfig } from "@medusajs/framework/utils";
 
 loadEnv(process.env.NODE_ENV || "development", process.cwd());
 
+const isProd = process.env.NODE_ENV === "production";
+
+// Never boot a production instance on insecure defaults.
+if (isProd) {
+  const required = ["JWT_SECRET", "COOKIE_SECRET", "PAYLOAD_API_KEY"] as const;
+  const missing = required.filter((name) => !process.env[name]);
+  if (missing.length > 0) {
+    throw new Error(
+      `Missing required environment variables in production: ${missing.join(", ")}`,
+    );
+  }
+}
+
 module.exports = defineConfig({
   projectConfig: {
     redisUrl: process.env.REDIS_URL,

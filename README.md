@@ -23,15 +23,21 @@ This project contains a complete e-commerce solution with Medusa backend and Nex
    cd ecommerce
    ```
 
-2. **Start all services**:
+2. **Configure environment variables**:
+   ```bash
+   cp .env.example .env
+   ```
+   Then fill in the secret values in `.env` (generate strong random secrets with `openssl rand -hex 32`). Docker Compose reads this file automatically — never commit `.env`.
+
+3. **Start all services**:
    ```bash
    docker-compose up -d
    ```
 
-3. **Wait for services to start**:
+4. **Wait for services to start**:
    The database migrations and seeding happen automatically on first startup.
 
-4. **Access the applications**:
+5. **Access the applications**:
    - **Storefront**: http://localhost:8000
    - **Backend API**: http://localhost:9000
    - **Admin Dashboard**: http://localhost:9000/app

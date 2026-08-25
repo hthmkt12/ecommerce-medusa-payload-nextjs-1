@@ -17,6 +17,16 @@ import { Categories } from './collections/Categories'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
+function requiredEnv(name: string): string {
+  const value = process.env[name]
+  if (!value) {
+    throw new Error(
+      `Missing required environment variable ${name}. Copy .env.example to .env and fill it in.`,
+    )
+  }
+  return value
+}
+
 export default buildConfig({
   admin: {
     user: Users.slug,
@@ -26,13 +36,13 @@ export default buildConfig({
   },
   collections: [Users, Media, Products, Collections, Categories],
   editor: lexicalEditor(),
-  secret: process.env.PAYLOAD_SECRET || '',
+  secret: requiredEnv('PAYLOAD_SECRET'),
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
   db: postgresAdapter({
     pool: {
-      connectionString: process.env.DATABASE_URI || '',
+      connectionString: requiredEnv('DATABASE_URI'),
     },
   }),
   sharp,
