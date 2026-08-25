@@ -1,6 +1,7 @@
 import { Heading, Text } from "@medusajs/ui"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import Image from "next/image"
+import { resolvePayloadMediaUrl } from "@lib/util/payload-images"
 
 import type { PayloadCategory } from "types/categories.types"
 
@@ -13,7 +14,7 @@ export default function ProductCategories({
 }: ProductCategoriesProps) {
   const getImageUrl = (image: string) => {
     // Always using the Payload URL as Medusa categories are not used to serve images
-    return `${process.env.NEXT_PUBLIC_PAYLOAD_SERVER_URL}${image}`
+    return resolvePayloadMediaUrl(image)
   }
 
   return (
