@@ -1,4 +1,4 @@
-import { HttpTypes } from "@medusajs/types"
+﻿import { HttpTypes } from "@medusajs/types"
 import { Container } from "@medusajs/ui"
 import Checkbox from "@modules/common/components/checkbox"
 import Input from "@modules/common/components/input"
@@ -196,6 +196,7 @@ const ShippingAddress = ({
           label="Email"
           name="email"
           type="email"
+          spellCheck={false}
           title="Enter a valid email address."
           autoComplete="email"
           value={formData.email}
@@ -206,6 +207,7 @@ const ShippingAddress = ({
         <Input
           label="Phone"
           name="shipping_address.phone"
+          type="tel"
           autoComplete="tel"
           value={formData["shipping_address.phone"]}
           onChange={handleChange}

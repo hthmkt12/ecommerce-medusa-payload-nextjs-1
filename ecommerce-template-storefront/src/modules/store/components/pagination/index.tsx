@@ -49,9 +49,10 @@ export function Pagination({
   const renderEllipsis = (key: string) => (
     <span
       key={key}
+      aria-hidden="true"
       className="txt-xlarge-plus text-ui-fg-muted items-center cursor-default"
     >
-      ...
+      …
     </span>
   )
 
