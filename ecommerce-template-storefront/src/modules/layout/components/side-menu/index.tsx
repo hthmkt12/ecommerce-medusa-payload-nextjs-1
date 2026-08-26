@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { Popover, PopoverPanel, Transition } from "@headlessui/react"
 import { ArrowRightMini, XMark } from "@medusajs/icons"
@@ -28,7 +28,7 @@ const SideMenu = ({ regions }: { regions: HttpTypes.StoreRegion[] | null }) => {
               <div className="relative flex h-full">
                 <Popover.Button
                   data-testid="nav-menu-button"
-                  className="relative h-full flex items-center transition-all ease-out duration-200 focus:outline-none hover:text-ui-fg-base"
+                  className="relative h-full flex items-center transition-colors ease-out duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ui-fg-base hover:text-ui-fg-base"
                 >
                   Menu
                 </Popover.Button>
@@ -90,7 +90,7 @@ const SideMenu = ({ regions }: { regions: HttpTypes.StoreRegion[] | null }) => {
                         />
                       </div>
                       <Text className="flex justify-between txt-compact-small">
-                        © {new Date().getFullYear()} Medusa Store. All rights
+                        Â© {new Date().getFullYear()} Medusa Store. All rights
                         reserved.
                       </Text>
                     </div>

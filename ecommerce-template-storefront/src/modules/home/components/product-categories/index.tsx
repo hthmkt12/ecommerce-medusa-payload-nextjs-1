@@ -1,4 +1,4 @@
-import { Heading, Text } from "@medusajs/ui"
+﻿import { Heading, Text } from "@medusajs/ui"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import Image from "next/image"
 import { resolvePayloadMediaUrl } from "@lib/util/payload-images"
@@ -46,7 +46,7 @@ export default function ProductCategories({
             )}
 
             {/* Overlay for better text readability */}
-            <div className="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-30 transition-all duration-300" />
+            <div className="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-30 transition-opacity duration-300" />
 
             {/* Content */}
             <div className="relative z-10 h-full flex flex-col justify-center items-center p-6 text-center">
