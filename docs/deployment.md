@@ -68,14 +68,26 @@ Note: TOSE managed DB provisioning was broken at deploy time (see Known Issues),
 ## Known Issues (TOSE platform)
 
 1. Managed DB provisioning fails (~5 min timeout) — use external Postgres.
-2. Rolling updates can wedge: new pod stays Pending while an old pod holds quota;
-   `tose down -y` may not clean orphaned ReplicaSets from failed rollouts.
-   Remedy: stop stale deployments via API, verify `Pods: 0/0`, then deploy once.
-   Confirmed 2026-08-25: `tose down` refuses when the *latest* deployment record
-   is "failed" ("Latest deployment is already failed") even though a pod from an
-   *earlier* deployment still holds quota; `tose restart` only bounces the old
-   pod. Clearing the stale deployment requires the dashboard/API — the CLI alone
-   cannot recover from this state.
+2. Rolling updates wedge when the project quota fits exactly one pod
+   (e.g. 250m/512Mi): the surge pod stays Pending while the old pod holds all
+   quota, rollout times out after 5m, and the platform marks the deployment
+   failed while leaving BOTH pods behind. Confirmed root cause 2026-08-25.
+   **Working remedy (API, not CLI)** — project quota must be free before a
+   deploy can roll:
+   a. `POST /api/workspaces/{ws}/projects/{slug}/deployments/{id}/stop` on the
+      deployment that owns the Running pod (auth: `X-API-Key`, key from
+      `~/.tose/config.json`; base `https://api-v2.tose.sh`).
+   b. Verify `tose status <project>` shows `pods: 0/0`.
+   c. Deploy once (`tose deploy <project>`). Brief downtime = build + roll.
+   Notes:
+   - `tose down -y` refuses when the *latest* deployment record is "failed"
+     ("Latest deployment is already failed") even though an older pod holds
+     quota; `tose restart` only bounces the old pod.
+   - Stopping a deployment normally reaps its pod instantly (observed on CMS
+     and backend), but at least one storefront ReplicaSet pod survived both
+     stopDeployment and tose down and still serves traffic after >24h. That
+     orphan consumes quota and blocks every new rollout; clearing it requires
+     the TOSE dashboard/support (no CLI/API surface exposes it).
 3. If the default domain 404s (Go-router text/plain 404) after a failed rollout,
    re-add it via `POST /projects/<slug>/domains`.
 
