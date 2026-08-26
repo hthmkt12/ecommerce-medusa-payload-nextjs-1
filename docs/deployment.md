@@ -57,13 +57,36 @@ Note: TOSE managed DB provisioning was broken at deploy time (see Known Issues),
 - `NEXT_PUBLIC_*` are baked at image build time (pinned in the branch Dockerfile):
   publishable key, base URL, payload server URL. Changing them requires editing
   `Dockerfile` on `deploy/storefront` and pushing.
-
 ## First-run accounts
 
-- Payload admin: created via REST `POST /api/users/first-register` (admin@hthmkt12.com).
-  API key lives on that user (`enableAPIKey`). Auth header format:
-  `Authorization: users API-Key <key>`.
-- Medusa publishable key: seeded into DB table `api_key` (query it there if lost).
+- **Medusa admin** (restored 2026-08-25): `admin@hthmkt12.com` — created directly
+  in Supabase (`user` + `auth_identity` with `app_metadata.user_id` +
+  `provider_identity` emailpass scrypt-kdf hash). Password was generated at
+  recovery time; rotate it in `/dashboard` after first login. Login endpoint:
+  `POST /auth/user/emailpass`.
+- **Payload admin**: same email; password also reset during recovery — change on
+  first login at `/admin`. API key rotation is done through the admin UI
+  (Users → enableAPIKey); the key currently wired into the backend env was
+  verified against the live CMS.
+- Medusa publishable key: seeded into DB table `api_key`
+  (query it there if lost).
+
+## Sync status (verified 2026-08-25)
+
+Full sync executed successfully against production:
+products 4/4 and categories 4/4 landed in Payload (collections 0 = 0, matching
+Medusa). Incremental sync fires via subscribers on product/category/collection
+lifecycle events. To re-run a full sync:
+
+```bash
+TOKEN=$(curl -s -X POST https://hthmkt12-workspace-ecommerce.tose.sh/auth/user/emailpass \
+  -H 'Content-Type: application/json' \
+  -d '{"email":"admin@hthmkt12.com","password":"<pw>"}' | jq -r .token)
+
+curl -X POST https://hthmkt12-workspace-ecommerce.tose.sh/admin/payload/sync/products \
+  -H "Authorization: Bearer $TOKEN"
+# repeat for /categories and /collections as needed
+```
 
 ## Known Issues (TOSE platform)
 
