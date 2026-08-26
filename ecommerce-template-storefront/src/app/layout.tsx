@@ -28,12 +28,25 @@ export const viewport: Viewport = {
 }
 
 export default function RootLayout(props: { children: React.ReactNode }) {
+  const payloadHost = (() => {
+    try {
+      return new URL(
+        process.env.NEXT_PUBLIC_PAYLOAD_SERVER_URL || "http://localhost:3000"
+      ).host
+    } catch {
+      return null
+    }
+  })()
+
   return (
     <html
       lang="en"
       data-mode="light"
       className={`${cormorant.variable} ${montserrat.variable}`}
     >
+      {payloadHost && (
+        <link rel="preconnect" href={`https://${payloadHost}`} />
+      )}
       <body>
         <a
           href="#main-content"
