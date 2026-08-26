@@ -1,8 +1,8 @@
-"use client"
+﻿"use client"
 
 import Image from "next/image"
 import { useState, useEffect, useRef } from "react"
-import { AnimatePresence, motion } from "motion/react"
+import { AnimatePresence, motion, MotionConfig } from "motion/react"
 import { Button } from "@medusajs/ui"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 
@@ -82,11 +82,12 @@ const MotionImageGallery = ({
   }
 
   return (
-    <div
-      className="flex w-full cursor-pointer h-[400px] md:h-[500px] lg:h-[640px]"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
+    <MotionConfig reducedMotion="user">
+      <div
+        className="flex w-full cursor-pointer h-[400px] md:h-[500px] lg:h-[640px]"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
       {products.map((product, index) => {
         const isActive = currentIndex === index
 
@@ -193,11 +194,12 @@ const MotionImageGallery = ({
                   </motion.div>
                 )}
               </AnimatePresence>
-            </motion.div>
+             </motion.div>
           </motion.div>
         )
       })}
-    </div>
+      </div>
+    </MotionConfig>
   )
 }
 
