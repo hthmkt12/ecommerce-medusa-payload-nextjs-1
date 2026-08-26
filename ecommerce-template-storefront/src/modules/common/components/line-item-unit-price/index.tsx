@@ -1,4 +1,4 @@
-import { convertToLocale } from "@lib/util/money"
+﻿import { convertToLocale } from "@lib/util/money"
 import { HttpTypes } from "@medusajs/types"
 import { clx } from "@medusajs/ui"
 
@@ -29,7 +29,7 @@ const LineItemUnitPrice = ({
               <span className="text-ui-fg-muted">Original: </span>
             )}
             <span
-              className="line-through"
+              className="line-through tabular-nums"
               data-testid="product-unit-original-price"
             >
               {convertToLocale({
@@ -44,7 +44,7 @@ const LineItemUnitPrice = ({
         </>
       )}
       <span
-        className={clx("text-base-regular", {
+        className={clx("text-base-regular tabular-nums", {
           "text-ui-fg-interactive": hasReducedPrice,
         })}
         data-testid="product-unit-price"
