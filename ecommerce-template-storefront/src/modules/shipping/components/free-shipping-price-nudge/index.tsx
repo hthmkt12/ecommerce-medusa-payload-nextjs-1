@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { convertToLocale } from "@lib/util/money"
 import { CheckCircleSolid, XMark } from "@medusajs/icons"
@@ -200,7 +200,7 @@ function FreeShippingPopup({
   return (
     <div
       className={clx(
-        "fixed bottom-5 right-5 flex flex-col items-end gap-2 transition-all duration-500 ease-in-out z-10",
+        "fixed bottom-5 right-5 flex flex-col items-end gap-2 transition-opacity duration-500 ease-in-out z-10",
         {
           "opacity-0 invisible delay-1000": price.target_reached,
           "opacity-0 invisible": isClosed,
@@ -210,7 +210,7 @@ function FreeShippingPopup({
     >
       <div>
         <Button
-          className="rounded-full bg-neutral-900 shadow-none outline-none border-none text-[15px] p-2"
+          aria-label="Dismiss free shipping notice" className="rounded-full bg-neutral-900 shadow-none border-none text-[15px] p-2 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black hover:bg-neutral-700 transition-colors duration-150"
           onClick={() => setIsClosed(true)}
         >
           <XMark />
@@ -264,14 +264,14 @@ function FreeShippingPopup({
 
         <div className="flex gap-3">
           <LocalizedClientLink
-            className="rounded-2xl bg-transparent shadow-none outline-none border-[1px] border-white text-[15px] py-2.5 px-4"
+            className="rounded-2xl bg-transparent shadow-none border-[1px] border-white text-[15px] py-2.5 px-4 hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white transition-colors duration-150"
             href="/cart"
           >
             View cart
           </LocalizedClientLink>
 
           <LocalizedClientLink
-            className="flex-grow rounded-2xl bg-white text-neutral-950 shadow-none outline-none border-[1px] border-white text-[15px] py-2.5 px-4 text-center"
+            className="flex-grow rounded-2xl bg-white text-neutral-950 shadow-none border-[1px] border-white text-[15px] py-2.5 px-4 text-center hover:bg-neutral-200 focus-visible:ring-2 focus-visible:ring-white transition-colors duration-150"
             href="/store"
           >
             View products
