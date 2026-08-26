@@ -114,6 +114,23 @@ curl -X POST https://hthmkt12-workspace-ecommerce.tose.sh/admin/payload/sync/pro
 3. If the default domain 404s (Go-router text/plain 404) after a failed rollout,
    re-add it via `POST /projects/<slug>/domains`.
 
+## Operational notes (learned 2026-08-25)
+
+- **Every push to a wired branch triggers an auto-deploy** (GitHub webhook).
+  Combined with issue #2 above, pushing while a pod is Running will wedge that
+  deploy. After any push, check `tose status`; if the webhook deploy failed,
+  run the stop→0/0→deploy remedy.
+- `PUT /projects/{slug}` accepts partial fields (e.g. `cpu`, `ram`) but makes
+  `git_connection` disappear from subsequent GET responses even though the
+  connection stays functional (manual builds still resolve the branch). There
+  is no CLI/API surface to view or modify `auto_deploy` afterwards; reconnect
+  via the dashboard if needed.
+- `tose restart` kills and recreates pods of the current k8s Deployment but
+  does not reap orphaned ReplicaSet pods either.
+- Medusa backend container runs migrations before boot (`start.sh`), so first
+  readiness can take longer than typical apps; keep the 5m rollout timeout in
+  mind when deploying DB-heavy changes.
+
 ## Build-time vs runtime env
 
 - Payload CMS: `src/payload.config.ts` fails fast when `PAYLOAD_SECRET` /
