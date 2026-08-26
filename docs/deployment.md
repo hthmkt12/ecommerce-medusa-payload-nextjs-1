@@ -113,17 +113,25 @@ curl -X POST https://hthmkt12-workspace-ecommerce.tose.sh/admin/payload/sync/pro
      the TOSE dashboard/support (no CLI/API surface exposes it).
 3. If the default domain 404s (Go-router text/plain 404) after a failed rollout,
    re-add it via `POST /projects/<slug>/domains`.
-4. **Storefront rollout hang (open, needs TOSE support)** — since 2026-08-24
-   every storefront deploy (webhook, manual, `tose up`, after full quota
-   cleanup) finishes building then hangs at status `deploying` forever: no new
-   pod is ever created and the deployment never fails or succeeds. Suspect a
-   stuck finalizer or worker on the platform side for this project's k8s
-   Deployment. The old zombie ReplicaSet pod (`59f8d7d559-…`) was eventually
-   cleared by stopping the stuck deployment record (which freed the restart-
-   created pod to schedule), so quota is NOT the blocker anymore. Site keeps
-   serving the previous image throughout. Ask TOSE support to inspect/replace
-   the k8s Deployment `hthmkt12-workspace-ecommerce-storefront`, then run
-   `tose deploy ecommerce-storefront`.
+4. **Storefront rollout hang (open, needs TOSE support) — SITE DOWN since
+   2026-08-26.** Every storefront deployment finishes building (~5 min, normal)
+   then hangs at status `deploying` forever while creating ZERO pods (polled at
+   20 s intervals through an entire rollout window: no Pending, no CrashLoop,
+   nothing). Reproduced on a BRAND-NEW project after deleting the old one:
+   - Old project `ecommerce-storefront` deleted (its slug remains reserved;
+     recreate returns 409).
+   - Fresh project `ecommerce-storefront-2` (id `da77962oa02fg29gmq8g`)
+     created; git (`deploy/storefront`), env, and the public domain
+     `hthmkt12-workspace-storefront.tose.sh` re-attached successfully.
+   - Deployments `da779c2oa…`, `da779kaoa…`, `da77maqoa02ephpl8e90` all built
+     then hung identically with empty `build_log` and no pod creation.
+   Conclusion: TOSE deploy-worker defect between image build and k8s apply for
+   this workspace/server (SGP1). Backend and CMS deploys on the same server
+   rolled fine throughout, so it is specific to this pipeline path or project
+   family. Ask TOSE support to inspect their deploy worker / the k8s
+   Deployment `hthmkt12-workspace-ecommerce-storefront-2`; once fixed,
+   `tose use hthmkt12-workspace/ecommerce-storefront-2 && tose up` ships the
+   pending release (branch `deploy/storefront` @ `83e1ab0`).
 
 ## Operational notes (learned 2026-08-25)
 
