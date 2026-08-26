@@ -113,6 +113,17 @@ curl -X POST https://hthmkt12-workspace-ecommerce.tose.sh/admin/payload/sync/pro
      the TOSE dashboard/support (no CLI/API surface exposes it).
 3. If the default domain 404s (Go-router text/plain 404) after a failed rollout,
    re-add it via `POST /projects/<slug>/domains`.
+4. **Storefront rollout hang (open, needs TOSE support)** — since 2026-08-24
+   every storefront deploy (webhook, manual, `tose up`, after full quota
+   cleanup) finishes building then hangs at status `deploying` forever: no new
+   pod is ever created and the deployment never fails or succeeds. Suspect a
+   stuck finalizer or worker on the platform side for this project's k8s
+   Deployment. The old zombie ReplicaSet pod (`59f8d7d559-…`) was eventually
+   cleared by stopping the stuck deployment record (which freed the restart-
+   created pod to schedule), so quota is NOT the blocker anymore. Site keeps
+   serving the previous image throughout. Ask TOSE support to inspect/replace
+   the k8s Deployment `hthmkt12-workspace-ecommerce-storefront`, then run
+   `tose deploy ecommerce-storefront`.
 
 ## Operational notes (learned 2026-08-25)
 
