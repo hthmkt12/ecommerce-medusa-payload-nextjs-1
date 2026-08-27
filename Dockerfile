@@ -9,7 +9,7 @@ RUN npm install -g pnpm
 
 # Install dependencies first for better layer caching
 COPY ecommerce-template-storefront/package.json ecommerce-template-storefront/pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --no-frozen-lockfile
 
 # Copy storefront source
 COPY ecommerce-template-storefront/ .
