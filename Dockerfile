@@ -6,7 +6,7 @@ RUN apk add --no-cache libc6-compat
 
 WORKDIR /app
 
-RUN npm install -g pnpm
+RUN npm install -g pnpm@9
 
 # Install dependencies first for better layer caching
 COPY ecommerce-template/package.json ecommerce-template/pnpm-lock.yaml ./
